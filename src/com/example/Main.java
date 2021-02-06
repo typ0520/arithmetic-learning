@@ -31,12 +31,15 @@ public class Main {
         postOrderTraverse2(root);
     }
 
-    //广度优先遍历（Breadth FirstSearch，BFS,实际上就是逐层查找，又叫层次遍历，宽度优先搜索或横向优先搜索）
+    //广度优先遍历（Breadth First Search，BFS,实际上就是逐层查找，又叫层次遍历，宽度优先搜索或横向优先搜索）
     public static void bfsTraverse(TreeNode root) {
-        List<TreeNode> queue = new ArrayList<>();
+//        List<TreeNode> queue = new ArrayList<>();
+//        queue.add(root);
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>();
         queue.add(root);
         while (!queue.isEmpty()) {
-            root = queue.remove(0);
+            //root = queue.remove(0);
+            root = queue.pop();
             System.out.print(root.val + "  ");
             if (root.left != null) {
                 queue.add(root.left);
