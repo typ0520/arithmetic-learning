@@ -30,7 +30,7 @@ public class Main {
     //https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/solution/biao-shi-shu-zhi-de-zi-fu-chuan-by-leetcode-soluti/
     public static boolean isNumber(String s) {
         Map<State, Map<CharType, State>> transfer = new HashMap<>();
-        Map<CharType, State> initialMap = new HashMap<>(){{
+        Map<CharType, State> initialMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_SPACE, State.STATE_INITIAL);
             put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
             put(CharType.CHAR_POINT, State.STATE_POINT_WITHOUT_INT);
@@ -38,13 +38,13 @@ public class Main {
         }};
         transfer.put(State.STATE_INITIAL, initialMap);
 
-        Map<CharType, State> intSignMap = new HashMap<>(){{
+        Map<CharType, State> intSignMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
             put(CharType.CHAR_POINT, State.STATE_POINT_WITHOUT_INT);
         }};
         transfer.put(State.STATE_INT_SIGN, intSignMap);
 
-        Map<CharType, State> integerMap = new HashMap<>(){{
+        Map<CharType, State> integerMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_POINT, State.STATE_FRACTION);
             put(CharType.CHAR_EXP, State.STATE_EXP);
             put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
@@ -52,43 +52,43 @@ public class Main {
         }};
         transfer.put(State.STATE_INTEGER, integerMap);
 
-        Map<CharType, State> pointMap = new HashMap<>(){{
+        Map<CharType, State> pointMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
             put(CharType.CHAR_SPACE, State.STATE_END);
             put(CharType.CHAR_EXP, State.STATE_END);
         }};
         transfer.put(State.STATE_POINT, pointMap);
 
-        Map<CharType, State> pointWithoutIntMap = new HashMap<>(){{
+        Map<CharType, State> pointWithoutIntMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
         }};
         transfer.put(State.STATE_POINT_WITHOUT_INT, pointWithoutIntMap);
 
-        Map<CharType, State> fractionMap = new HashMap<>(){{
+        Map<CharType, State> fractionMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
             put(CharType.CHAR_EXP, State.STATE_EXP);
             put(CharType.CHAR_SPACE, State.STATE_END);
         }};
         transfer.put(State.STATE_FRACTION, fractionMap);
 
-        Map<CharType, State> expMap = new HashMap<>(){{
+        Map<CharType, State> expMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_SIGN, State.STATE_EXP_SIGN);
             put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
         }};
         transfer.put(State.STATE_EXP, expMap);
 
-        Map<CharType, State> expSignMap = new HashMap<>(){{
+        Map<CharType, State> expSignMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
         }};
         transfer.put(State.STATE_EXP_SIGN, expSignMap);
 
-        Map<CharType, State> expNumberMap = new HashMap<>(){{
+        Map<CharType, State> expNumberMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
             put(CharType.CHAR_SPACE, State.STATE_END);
         }};
         transfer.put(State.STATE_EXP_NUMBER, expNumberMap);
 
-        Map<CharType, State> endMap = new HashMap<>(){{
+        Map<CharType, State> endMap = new HashMap<CharType, State>(){{
             put(CharType.CHAR_SPACE, State.STATE_END);
         }};
         transfer.put(State.STATE_END, endMap);

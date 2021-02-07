@@ -61,12 +61,7 @@ public class TreeNodeTest {
     //深度优先遍历（Depth First Search，DFS，前序遍历)
     public static void preOrderTraverse2(TreeNode root) {
         LinkedList<TreeNode> stack = new LinkedList<>();
-        int maxDepth = 1;
-
         while (root != null || !stack.isEmpty()) {
-            if (maxDepth < stack.size() + 1) {
-                maxDepth = stack.size() + 1;
-            }
             if (root != null) {
                 System.out.print(root.val + "  ");
                 stack.push(root);
@@ -76,7 +71,6 @@ public class TreeNodeTest {
                 root = node.right;
             }
         }
-        System.out.println("\n最大深度: " + maxDepth);
     }
 
     //深度优先遍历（Depth First Search，DFS，中序遍历)
@@ -92,21 +86,15 @@ public class TreeNodeTest {
     //深度优先遍历（Depth First Search，DFS，中序遍历)
     public static void inOrderTraverse2(TreeNode root) {
         LinkedList<TreeNode> stack = new LinkedList<>();
-        int maxDepth = 1;
-
         while (root != null || !stack.isEmpty()) {
             while (root != null) {
                 stack.push(root);
                 root = root.left;
             }
-            if (maxDepth < stack.size() + 1) {
-                maxDepth = stack.size() + 1;
-            }
             root = stack.pop();
             System.out.print(root.val + "  ");
             root = root.right;
         }
-        System.out.println("\n最大深度: " + maxDepth);
     }
 
     //深度优先遍历（Depth First Search，DFS，后序遍历)
@@ -115,12 +103,32 @@ public class TreeNodeTest {
             return;
         }
         postOrderTraverse1(root.left);
-        System.out.print(root.val + "  ");
         postOrderTraverse1(root.right);
+        System.out.print(root.val + "  ");
     }
+
+
 
     //深度优先遍历（Depth First Search，DFS，后序遍历)
     public static void postOrderTraverse2(TreeNode root) {
-
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        stack.addLast(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.getLast();
+            stack.removeLast();
+            if (node != null) {
+                stack.addLast(node);
+                stack.addLast(null);
+                if (node.right != null) {
+                    stack.addLast(node.right);
+                }
+                if (node.left != null) {
+                    stack.addLast(node.left);
+                }
+            } else {
+                node = stack.removeLast();
+                System.out.print(node.val + "  ");
+            }
+        }
     }
 }

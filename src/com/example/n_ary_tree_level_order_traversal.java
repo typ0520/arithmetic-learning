@@ -6,10 +6,10 @@ public class n_ary_tree_level_order_traversal {
     public static void main(String[] args) {
         Node root = new Node();
         root.val = 1;
-        root.children = new ArrayList<>(){{
+        root.children = new ArrayList<Node>(){{
             add(new Node(){{
                 val = 3;
-                children = new ArrayList<>(){{
+                children = new ArrayList<Node>(){{
                     add(new Node(){{
                         val = 5;
                     }});
