@@ -1,140 +1,146 @@
 package com.example;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        TreeNode root = new TreeNode(null, null, 1);
-        root.left = new TreeNode(null, null, 2);
-        root.right = new TreeNode(null, null, 3);
-        root.left.left = new TreeNode(null, null, 4);
-        root.left.right = new TreeNode(null, null, 5);
-        root.right.right = new TreeNode(null, null, 6);
-        root.left.right.left = new TreeNode(null, null, 7);
-        root.left.right.right = new TreeNode(null, null, 8);
+        Map<String, Boolean> testCase = new HashMap<>();
+        testCase.put("+100", true);
+        testCase.put("5e2", true);
+        testCase.put("-123", true);
+        testCase.put("3.1416", true);
+        testCase.put("-1E-16", true);
+        testCase.put("0123", true);
 
-        System.out.println("BFS:");
-        bfsTraverse(root);
-        System.out.println("\n前序: ");
-        preOrderTraverse1(root);
-        System.out.println();
-        preOrderTraverse2(root);
+        testCase.put("12e", false);
+        testCase.put("1a3.14", false);
+        testCase.put("1.2.3", false);
+        testCase.put("+-5", false);
+        testCase.put("12e+5.4", false);
 
-        System.out.println("\n中序: ");
-        inOrderTraverse1(root);
-        System.out.println();
-        inOrderTraverse2(root);
-
-        System.out.println("\n后序: ");
-        postOrderTraverse1(root);
-        System.out.println();
-        postOrderTraverse2(root);
-    }
-
-    //广度优先遍历（Breadth First Search，BFS,实际上就是逐层查找，又叫层次遍历，宽度优先搜索或横向优先搜索）
-    public static void bfsTraverse(TreeNode root) {
-//        List<TreeNode> queue = new ArrayList<>();
-//        queue.add(root);
-        ArrayDeque<TreeNode> queue = new ArrayDeque<>();
-        queue.add(root);
-        while (!queue.isEmpty()) {
-            //root = queue.remove(0);
-            root = queue.pop();
-            System.out.print(root.val + "  ");
-            if (root.left != null) {
-                queue.add(root.left);
-            }
-            if (root.right != null) {
-                queue.add(root.right);
+        for (Map.Entry<String, Boolean> entry : testCase.entrySet()) {
+            boolean result = isNumber(entry.getKey());
+            if (result != entry.getValue()) {
+                System.out.println(entry.getKey() + ", expect: " + entry.getValue() + " actual: " + result);
             }
         }
     }
 
-    //深度优先遍历（Depth First Search，DFS，前序遍历)
-    public static void preOrderTraverse1(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        System.out.print(root.val + "  ");
-        preOrderTraverse1(root.left);
-        preOrderTraverse1(root.right);
-    }
+    //https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/solution/biao-shi-shu-zhi-de-zi-fu-chuan-by-leetcode-soluti/
+    public static boolean isNumber(String s) {
+        Map<State, Map<CharType, State>> transfer = new HashMap<>();
+        Map<CharType, State> initialMap = new HashMap<>(){{
+            put(CharType.CHAR_SPACE, State.STATE_INITIAL);
+            put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
+            put(CharType.CHAR_POINT, State.STATE_POINT_WITHOUT_INT);
+            put(CharType.CHAR_SIGN, State.STATE_INT_SIGN);
+        }};
+        transfer.put(State.STATE_INITIAL, initialMap);
 
-    //深度优先遍历（Depth First Search，DFS，前序遍历)
-    public static void preOrderTraverse2(TreeNode root) {
-        LinkedList<TreeNode> stack = new LinkedList<>();
-        int maxDepth = 1;
+        Map<CharType, State> intSignMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
+            put(CharType.CHAR_POINT, State.STATE_POINT_WITHOUT_INT);
+        }};
+        transfer.put(State.STATE_INT_SIGN, intSignMap);
 
-        while (root != null || !stack.isEmpty()) {
-            if (maxDepth < stack.size() + 1) {
-                maxDepth = stack.size() + 1;
+        Map<CharType, State> integerMap = new HashMap<>(){{
+            put(CharType.CHAR_POINT, State.STATE_FRACTION);
+            put(CharType.CHAR_EXP, State.STATE_EXP);
+            put(CharType.CHAR_NUMBER, State.STATE_INTEGER);
+            put(CharType.CHAR_SPACE, State.STATE_END);
+        }};
+        transfer.put(State.STATE_INTEGER, integerMap);
+
+        Map<CharType, State> pointMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
+            put(CharType.CHAR_SPACE, State.STATE_END);
+            put(CharType.CHAR_EXP, State.STATE_END);
+        }};
+        transfer.put(State.STATE_POINT, pointMap);
+
+        Map<CharType, State> pointWithoutIntMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
+        }};
+        transfer.put(State.STATE_POINT_WITHOUT_INT, pointWithoutIntMap);
+
+        Map<CharType, State> fractionMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_FRACTION);
+            put(CharType.CHAR_EXP, State.STATE_EXP);
+            put(CharType.CHAR_SPACE, State.STATE_END);
+        }};
+        transfer.put(State.STATE_FRACTION, fractionMap);
+
+        Map<CharType, State> expMap = new HashMap<>(){{
+            put(CharType.CHAR_SIGN, State.STATE_EXP_SIGN);
+            put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
+        }};
+        transfer.put(State.STATE_EXP, expMap);
+
+        Map<CharType, State> expSignMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
+        }};
+        transfer.put(State.STATE_EXP_SIGN, expSignMap);
+
+        Map<CharType, State> expNumberMap = new HashMap<>(){{
+            put(CharType.CHAR_NUMBER, State.STATE_EXP_NUMBER);
+            put(CharType.CHAR_SPACE, State.STATE_END);
+        }};
+        transfer.put(State.STATE_EXP_NUMBER, expNumberMap);
+
+        Map<CharType, State> endMap = new HashMap<>(){{
+            put(CharType.CHAR_SPACE, State.STATE_END);
+        }};
+        transfer.put(State.STATE_END, endMap);
+
+        int length = s.length();
+        State state = State.STATE_INITIAL;
+        for (int i = 0; i < length; i++) {
+            CharType charType = toCharType(s.charAt(i));
+            if (!transfer.get(state).containsKey(charType)) {
+                return false;
+            } else {
+                state = transfer.get(state).get(charType);
             }
-            if (root != null) {
-                System.out.print(root.val + "  ");
-                stack.push(root);
-                root = root.left;
-            } else { //pNode == null && !stack.isEmpty()
-                TreeNode node = stack.pop();
-                root = node.right;
-            }
         }
-        System.out.println("\n最大深度: " + maxDepth);
+        return state == State.STATE_INTEGER || state == State.STATE_POINT || state == State.STATE_FRACTION || state == State.STATE_EXP_NUMBER || state == State.STATE_END;
     }
 
-    //深度优先遍历（Depth First Search，DFS，中序遍历)
-    public static void inOrderTraverse1(TreeNode root) {
-        if (root == null) {
-            return;
+    public static CharType toCharType(char c) {
+        if (c == ' ') {
+            return CharType.CHAR_SPACE;
+        } else if (c == '-' || c == '+') {
+            return CharType.CHAR_SIGN;
+        } else if (c >= '0' && c <= '9') {
+            return CharType.CHAR_NUMBER;
+        } else if (c == '.') {
+            return CharType.CHAR_POINT;
+        } else if (c == 'e' || c == 'E') {
+            return CharType.CHAR_EXP;
+        } else {
+            return CharType.CHAR_ILLEGAL;
         }
-        inOrderTraverse1(root.left);
-        System.out.print(root.val + "  ");
-        inOrderTraverse1(root.right);
     }
 
-    //深度优先遍历（Depth First Search，DFS，中序遍历)
-    public static void inOrderTraverse2(TreeNode root) {
-        LinkedList<TreeNode> stack = new LinkedList<>();
-        int maxDepth = 1;
-
-        while (root != null || !stack.isEmpty()) {
-            while (root != null) {
-                stack.push(root);
-                root = root.left;
-            }
-            if (maxDepth < stack.size() + 1) {
-                maxDepth = stack.size() + 1;
-            }
-            root = stack.pop();
-            System.out.print(root.val + "  ");
-            root = root.right;
-        }
-        System.out.println("\n最大深度: " + maxDepth);
+    public enum State {
+        STATE_INITIAL,
+        STATE_INT_SIGN,
+        STATE_INTEGER,
+        STATE_POINT,
+        STATE_POINT_WITHOUT_INT,
+        STATE_FRACTION,
+        STATE_EXP,
+        STATE_EXP_SIGN,
+        STATE_EXP_NUMBER,
+        STATE_END
     }
 
-    //深度优先遍历（Depth First Search，DFS，后序遍历)
-    public static void postOrderTraverse1(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        postOrderTraverse1(root.left);
-        System.out.print(root.val + "  ");
-        postOrderTraverse1(root.right);
-    }
-
-    //深度优先遍历（Depth First Search，DFS，后序遍历)
-    public static void postOrderTraverse2(TreeNode root) {
-
-    }
-
-    public static class TreeNode {
-        TreeNode left;
-        TreeNode right;
-        Object val;
-
-        public TreeNode(TreeNode left, TreeNode right, Object val) {
-            this.left = left;
-            this.right = right;
-            this.val = val;
-        }
+    public enum CharType {
+        CHAR_SPACE,
+        CHAR_SIGN,
+        CHAR_NUMBER,
+        CHAR_POINT,
+        CHAR_EXP,
+        CHAR_ILLEGAL
     }
 }
