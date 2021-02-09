@@ -10,4 +10,11 @@ public class TreeNode {
         this.right = right;
         this.val = val;
     }
+
+    @Override
+    public String toString() {
+        return "TreeNode{" +
+                "val=" + val +
+                '}';
+    }
 }

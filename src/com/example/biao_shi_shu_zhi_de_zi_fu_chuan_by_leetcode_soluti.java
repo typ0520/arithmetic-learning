@@ -3,7 +3,7 @@ package com.example;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main {
+public class biao_shi_shu_zhi_de_zi_fu_chuan_by_leetcode_soluti {
     public static void main(String[] args) {
         Map<String, Boolean> testCase = new HashMap<>();
         testCase.put("+100", true);

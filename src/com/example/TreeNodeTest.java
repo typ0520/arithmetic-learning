@@ -38,13 +38,16 @@ public class TreeNodeTest {
         ArrayDeque<TreeNode> queue = new ArrayDeque<>();
         queue.add(root);
         //root = queue.remove(0);
-        root = queue.pop();
-        System.out.print(root.val + "  ");
-        if (root.left != null) {
-            queue.add(root.left);
-        }
-        if (root.right != null) {
-            queue.add(root.right);
+
+        while (!queue.isEmpty()) {
+            root = queue.pop();
+            System.out.print(root.val + "  ");
+            if (root.left != null) {
+                queue.add(root.left);
+            }
+            if (root.right != null) {
+                queue.add(root.right);
+            }
         }
     }
 
@@ -106,8 +109,6 @@ public class TreeNodeTest {
         postOrderTraverse1(root.right);
         System.out.print(root.val + "  ");
     }
-
-
 
     //深度优先遍历（Depth First Search，DFS，后序遍历)
     public static void postOrderTraverse2(TreeNode root) {
