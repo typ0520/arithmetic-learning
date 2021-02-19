@@ -4,39 +4,47 @@ import java.util.*;
 
 public class yong_liang_ge_zhan_shi_xian_dui_lie_lcof {
     public static void main(String[] args) {
-        TreeNode root = new TreeNode(null, null, 1);
+        TreeNode root = new TreeNode(null, null, 3);
 
-        root.left = new TreeNode(null, null, 2);
-        root.right = new TreeNode(null, null, 3);
+        root.left = new TreeNode(null, null, 9);
+        root.right = new TreeNode(null, null, 20);
 
-        root.left.left = new TreeNode(null, null, 4);
-        root.left.right = new TreeNode(null, null, 5);
-        root.right.right = new TreeNode(null, null, 6);
-
-        root.left.right.left = new TreeNode(null, null, 7);
-        root.left.right.right = new TreeNode(null, null, 8);
+        root.right.left = new TreeNode(null, null, 15);
+        root.right.right = new TreeNode(null, null, 7);
 
         List<List<Integer>> result = levelOrder(root);
         for (List<Integer> item : result) {
             System.out.println(item);
         }
+        int a = new StringBuilder("2").charAt(0);
+        System.out.println(a - '0');
+        int a2 = 1 + (int)Math.pow(10, 2);
+        System.out.println(Math.pow(10, 2));
     }
 
     public static List<List<Integer>> levelOrder(TreeNode root) {
-        Queue<TreeNode> queue = new LinkedList<>();
-        List<List<Integer>> res = new ArrayList<>();
-        if(root != null) queue.add(root);
-        while(!queue.isEmpty()) {
-            List<Integer> tmp = new ArrayList<>();
-            for(int i = queue.size(); i > 0; i--) {
-                TreeNode node = queue.poll();
-                tmp.add(node.val);
-                if(node.left != null) queue.add(node.left);
-                if(node.right != null) queue.add(node.right);
-            }
-            res.add(tmp);
+        List<List<Integer>> result = new LinkedList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
         }
-        return res;
+        boolean leftToRight = true;
+        while (!queue.isEmpty()) {
+            LinkedList<Integer> tmp = new LinkedList();
+            for (int i = queue.size(); i > 0; i--) {
+                root = queue.poll();
+                if (leftToRight) {
+                    tmp.add(root.val);
+                } else {
+                    tmp.addFirst(root.val);
+                }
+                if (root.left != null) queue.add(root.left);
+                if (root.right != null) queue.add(root.right);
+            }
+            leftToRight = !leftToRight;
+            result.add(tmp);
+        }
+        return result;
     }
 
     static class CQueue {
