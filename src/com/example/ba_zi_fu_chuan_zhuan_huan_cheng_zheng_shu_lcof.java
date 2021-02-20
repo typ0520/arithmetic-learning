@@ -1,5 +1,9 @@
 package com.example;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  写一个函数 StrToInt，实现把字符串转换成整数这个功能。不能使用 atoi 或者其他类似的库函数。
 
@@ -62,35 +66,93 @@ public class ba_zi_fu_chuan_zhuan_huan_cheng_zheng_shu_lcof {
         System.out.println(Integer.toBinaryString(-1));
         System.out.println(Long.MAX_VALUE);
         System.out.println("---------------------");
-        System.out.println(new Solution().strToInt("2147483647"));
-        System.out.println(new Solution().strToInt("-2147483648"));
-        System.out.println(new Solution().strToInt("-2147483649"));
-        System.out.println(new Solution().strToInt("-91283472332"));
-        System.out.println(new Solution().strToInt("20000000000000000000"));
-        System.out.println(new Solution().strToInt(" +-100"));
-        System.out.println(new Solution().strToInt(" 4399 word"));
+
+        Map<String, Integer> testCase = new LinkedHashMap<>();
+//        testCase.put("2147483647", 2147483647);
+//        testCase.put("2147483648", 2147483647);
+        testCase.put("-2147483648", -2147483648);
+        testCase.put("-2147483649", -2147483648);
+        testCase.put("-91283472332", -2147483648);
+        testCase.put(" +-100", 0);
+        testCase.put(" 4399 word", 4399);
+
+        for (Map.Entry<String, Integer> entry : testCase.entrySet()) {
+            int result = new Solution().strToInt(entry.getKey());
+            if (result != entry.getValue()) {
+                System.out.println(entry.getKey() + ", expect: " + entry.getValue() + " actual: " + result);
+            }
+        }
     }
 
     static class Solution {
+//        public int strToInt(String str) {
+//            if (str == null || (str = str.trim()).length() == 0) return 0;
+//            int sign = 1;
+//            int i = 0;
+//            if (str.charAt(0) == '-') {
+//                sign = -1;
+//                i = 1;
+//            }
+//            if (str.charAt(0) == '+') i = 1;
+//            int res = 0;
+//            for (; i < str.length(); i++) {
+//                if ((str.charAt(i) < '0' || str.charAt(i) > '9')) break;
+//                int num = str.charAt(i) - '0';
+//                if (res > Integer.MAX_VALUE / 10 || (res == Integer.MAX_VALUE / 10 && num > 7)) {
+//                    return sign > 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+//                }
+//                res = res * 10 + num;
+//            }
+//            return sign * res;
+//        }
+
         public int strToInt(String str) {
-            if (str == null || (str = str.trim()).length() == 0) return 0;
-            int sign = 1;
-            int i = 0;
-            if (str.charAt(0) == '-') {
-                sign = -1;
-                i = 1;
+            if (str == null) return 0;
+            Automaton automaton = new Automaton();
+            for (int i = 0; i < str.length(); i++) {
+                automaton.getchar(str.charAt(i));
             }
-            if (str.charAt(0) == '+') i = 1;
-            int res = 0;
-            for (; i < str.length(); i++) {
-                if ((str.charAt(i) < '0' || str.charAt(i) > '9')) break;
-                int num = str.charAt(i) - '0';
-                if (res > Integer.MAX_VALUE / 10 || (res == Integer.MAX_VALUE / 10 && num > 7)) {
-                    return sign > 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            return automaton.sign * (int)automaton.ans;
+        }
+
+        class Automaton {
+            private Map<String, String[]> table = new HashMap<>(){{
+                //                          ' ',    +/-,    0-9,      other
+                put("start",  new String[]{"start", "sign", "number", "end"});
+                put("sign",   new String[]{"end",   "end",  "number", "end"});
+                put("number", new String[]{"end",   "end",  "number", "end"});
+                put("end",    new String[]{"end",   "end",  "end",    "end"});
+            }};
+
+            public String status = "start";
+
+            public int sign = 1;
+            public long ans;
+
+            public int getcol(char c) {
+                if (c == ' ') {
+                    return 0;
+                } else if (c == '+' || c == '-') {
+                    return 1;
+                } else if (c >= '0' && c <= '9') {
+                    return 2;
                 }
-                res = res * 10 + num;
+                return 3;
             }
-            return sign * res;
+
+            public void getchar(char c) {
+                status = table.get(status)[getcol(c)];
+                if ("number".equals(status)) {
+                    ans = ans * 10 + (c - '0');
+                    if (sign == 1) {
+                        ans = Math.min(ans, (long)Integer.MAX_VALUE);
+                    } else {
+                        ans = -Math.max(-ans, (long)Integer.MIN_VALUE);
+                    }
+                } else if ("sign".equals(status)) {
+                    sign = c == '+' ? 1 : -1;
+                }
+            }
         }
     }
 }
