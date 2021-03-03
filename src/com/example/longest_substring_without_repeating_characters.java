@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class longest_substring_without_repeating_characters {
     public static void main(String[] args) {
@@ -14,7 +15,8 @@ public class longest_substring_without_repeating_characters {
 
     public static int lengthOfLongestSubstring(String s) {
         //return lengthOfLongestSubstring1(s);
-        return lengthOfLongestSubstring2(s);
+        //return lengthOfLongestSubstring2(s);
+        return lengthOfLongestSubstring3(s);
     }
 
     public static int lengthOfLongestSubstring1(String s) {
@@ -43,5 +45,26 @@ public class longest_substring_without_repeating_characters {
             max = Math.max(max,  end - start + 1);
         }
         return max;
+    }
+
+    public static int lengthOfLongestSubstring3(String s) {
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0, len = 0;
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            right++;
+            window.put(c, window.getOrDefault(c, 0) + 1);
+
+            while (window.containsKey(c) && window.get(c) > 1) {
+                char d = s.charAt(left);
+                left++;
+                window.put(d, window.get(d) - 1);
+                if (window.get(d) == 0) {
+                    window.remove(d);
+                }
+            }
+            len = Math.max(len, right - left);
+        }
+        return len;
     }
 }
