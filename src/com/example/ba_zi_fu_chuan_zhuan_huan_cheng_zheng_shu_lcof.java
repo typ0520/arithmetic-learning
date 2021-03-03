@@ -116,7 +116,7 @@ public class ba_zi_fu_chuan_zhuan_huan_cheng_zheng_shu_lcof {
         }
 
         class Automaton {
-            private Map<String, String[]> table = new HashMap<>(){{
+            private Map<String, String[]> table = new HashMap<String, String[]>(){{
                 //                          ' ',    +/-,    0-9,      other
                 put("start",  new String[]{"start", "sign", "number", "end"});
                 put("sign",   new String[]{"end",   "end",  "number", "end"});
