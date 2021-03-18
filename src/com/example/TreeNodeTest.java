@@ -24,16 +24,22 @@ public class TreeNodeTest {
         preOrderTraverse1(root);
         System.out.println();
         preOrderTraverse2(root);
+        System.out.println();
+        preOrderTraverse3(root);
 
         System.out.println("\n中序: ");
         inOrderTraverse1(root);
         System.out.println();
         inOrderTraverse2(root);
+        System.out.println();
+        inOrderTraverse3(root);
 
         System.out.println("\n后序: ");
         postOrderTraverse1(root);
         System.out.println();
         postOrderTraverse2(root);
+        System.out.println();
+        postOrderTraverse3(root);
     }
 
     //广度优先遍历（Breadth First Search，BFS,实际上就是逐层查找，又叫层次遍历，宽度优先搜索或横向优先搜索）
@@ -110,6 +116,18 @@ public class TreeNodeTest {
         }
     }
 
+    //深度优先遍历（Depth First Search，DFS，前序遍历)
+    public static void preOrderTraverse3(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        if (root != null) stack.add(root);
+        while (!stack.isEmpty()) {
+            root = stack.pollLast();
+            System.out.print(root.val + "  ");
+            if (root.right != null) stack.add(root.right);
+            if (root.left != null) stack.add(root.left);
+        }
+    }
+
     //深度优先遍历（Depth First Search，DFS，中序遍历)
     public static void inOrderTraverse1(TreeNode root) {
         if (root == null) {
@@ -134,6 +152,24 @@ public class TreeNodeTest {
         }
     }
 
+    //深度优先遍历（Depth First Search，DFS，中序遍历)
+    public static void inOrderTraverse3(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        if (root != null) stack.add(root);
+        while (!stack.isEmpty()) {
+            root = stack.pollLast();
+            if (root != null) {
+                if (root.right != null) stack.add(root.right);
+                stack.add(root);
+                stack.add(null);
+                if (root.left != null) stack.add(root.left);
+            } else {
+                root = stack.pollLast();
+                System.out.print(root.val + "  ");
+            }
+        }
+    }
+
     //深度优先遍历（Depth First Search，DFS，后序遍历)
     public static void postOrderTraverse1(TreeNode root) {
         if (root == null) {
@@ -146,23 +182,23 @@ public class TreeNodeTest {
 
     //深度优先遍历（Depth First Search，DFS，后序遍历)
     public static void postOrderTraverse2(TreeNode root) {
-        LinkedList<TreeNode> stack = new LinkedList<>();
-        stack.addLast(root);
+
+    }
+
+    //深度优先遍历（Depth First Search，DFS，后序遍历)
+    public static void postOrderTraverse3(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        if (root != null) stack.add(root);
         while (!stack.isEmpty()) {
-            TreeNode node = stack.getLast();
-            stack.removeLast();
-            if (node != null) {
-                stack.addLast(node);
-                stack.addLast(null);
-                if (node.right != null) {
-                    stack.addLast(node.right);
-                }
-                if (node.left != null) {
-                    stack.addLast(node.left);
-                }
+            root = stack.pollLast();
+            if (root != null) {
+                stack.add(root);
+                stack.add(null);
+                if (root.right != null) stack.add(root.right);
+                if (root.left != null) stack.add(root.left);
             } else {
-                node = stack.removeLast();
-                System.out.print(node.val + "  ");
+                root = stack.pollLast();
+                System.out.print(root.val + "  ");
             }
         }
     }
