@@ -9,6 +9,13 @@ public class Sort {
         }
     }
 
+    //冒泡 O(n^2)
+
+    //选择 O(n^2)
+
+    //插入 O(n^2)
+
+    //快排 O(logN)
     public static void quickSort(int[] nums, int l, int r) {
         if (l >= r) return;
         int base = nums[l];
